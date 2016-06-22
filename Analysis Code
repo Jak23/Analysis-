@@ -1,10 +1,11 @@
-# Analysis-
-#!/usr/bin/env python
+"""
+
 
 import matplotlib.pyplot as plt
 import numpy as np
 import cPickle,os,pdb,itertools
 import csv
+import array
 
 def analyze(fp,op):
 
@@ -136,51 +137,70 @@ def analyze(fp,op):
 ###############################################################################
     final_arrayw = np.array([[],[]])
     final_arrayw1 = np.array([[],[]])
-# final_arrayx = np.array([[],[]])
+    final_arrayx = np.array([[],[]])
     t_arrayw = np.array([[],[]])
+    fi = np.array([[],[],[],[],[],[],[],[],[]])
     for x in range(len(pages)):
         value_arrayw = np.array([[],[]])
         value_arrayw1 = np.array([[],[]])
         for m in range(len(pages[0][0][0])):
             time = pages[0][0][0][m]
             valw = pages[x][0][1][m]
+            #valw1 = array(pages[x][0][1][m])
             value_arrayw = np.append(value_arrayw, valw)
             t_arrayw = np.append(t_arrayw, time)
               
+            #fi = np.insert(value_arrayw, x, m, axis=1)      
         final_arrayw = np.append(final_arrayw, value_arrayw)
         final_arrayw1 = [t_arrayw,final_arrayw ]
         final_arrayw2 = [t_arrayw,final_arrayw[m] ]
 # final_arrayx = np.append(final_arrayx, final_arrayw)
-
-        numtest = (value_array[2]-value_array[0])/0.1
+            #fi = np.insert(valw, 1, x) 
+        
         
     plt.plot(final_arrayw1[0],final_arrayw1[1])
     plt.show()
     outputFile = open('output.csv', 'w')
     outputWriter = csv.writer(outputFile)
+    parmset =  np.array([[],[]])
+    m1  = np.array([[],[]])
+    m2  = np.array([[],[]])
+    m3  = np.array([[],[]])
+    m4  = np.array([[],[]])
+    m5  = np.array([[],[]])
+    m7  = np.array([[],[]])
+    m8  = np.array([[],[]])
+    m9  = np.array([[],[]])
+    m0  = np.array([[],[]])
+    parm = np.array([[],[]])
     for ii in range(len(pages[0][0][0])):
-        outputWriter.writerow([t_arrayw[ii],final_arrayw[ii],final_arrayw[ii+100],final_arrayw[ii+100],final_arrayw[ii+300],final_arrayw[ii+400]])
+        outputWriter.writerow([t_arrayw[ii],
+        final_arrayw[ii],final_arrayw[ii+100],
+        final_arrayw[ii+200],final_arrayw[ii+300],final_arrayw[ii+400],
+        final_arrayw[ii+500],final_arrayw[ii+600],
+        final_arrayw[ii+700],final_arrayw[ii+800]])
+        parmset = [t_arrayw[ii],
+        final_arrayw[ii],final_arrayw[ii+100],
+        final_arrayw[ii+200],final_arrayw[ii+300],final_arrayw[ii+400],
+        final_arrayw[ii+500],final_arrayw[ii+600],
+        final_arrayw[ii+700],final_arrayw[ii+800]]
+        m1 = np.append(m1, final_arrayw[ii+0])
+        m2 = np.append(m1, final_arrayw[ii+100])
+        m3 = np.append(m1, final_arrayw[ii+200])
+        m4 = np.append(m1, final_arrayw[ii+300])
+        m5 = np.append(m1, final_arrayw[ii+400])
+        m6 = np.append(m1, final_arrayw[ii+500])
+        m7 = np.append(m1, final_arrayw[ii+600])
+        m8 = np.append(m1, final_arrayw[ii+700])
+        m9 = np.append(m1, final_arrayw[ii+800])
+        m0 = np.append(m1, final_arrayw[ii+100])
+    parm = [m1,m2,m3,m4,m5,m6,m7,m8]
+        
+        
+        
+        
+        
+        
     outputFile.close()
 
 ##############################################################################
-
-##############################################################################
-
-
-
-
-    with open(op,'wb') as h:cPickle.dump(sm,h)
-    pdb.set_trace()
-
-def tellmewhatsup(fp):
-    with open(fp,'rb') as h:data = cPickle.load(h)
-    print('this is up',data)
-    pdb.set_trace()
-
-if __name__ == '__main__':
-    fi = os.path.join(os.getcwd(),'ensemble','statistics_output.pkl')
-    op = os.path.join(os.getcwd(),'sensimatrix.pkl')
-    analyze(fi,op)
-    tellmewhatsup(op)
-
-

@@ -1,11 +1,13 @@
 """
 
 
-import matplotlib.pyplot as plt
+mport matplotlib.pyplot as plt
 import numpy as np
 import cPickle,os,pdb,itertools
 import csv
 import array
+from sklearn import linear_model
+from scipy import linalg
 
 def analyze(fp,op):
 
@@ -50,32 +52,37 @@ def analyze(fp,op):
     SMt1 = np.array([[],[]]) 
     SMt2 = np.array([[],[]]) 
     SMt3 = np.array([[],[]]) 
-    StepS = np.array([[],[]]) 
-    StepS1 = np.array([[],[]])
-    StepS2 = np.array([[],[]])
-    StepS3 = np.array([[],[]])
-    StepS4 = np.array([[],[]])
+    T_step = np.array([[],[]]) 
+    T_step_r = np.array([[],[]])
     Sa = np.array([[],[]])
     Sg = np.array([[],[]])
     Var_a = np.array([[],[]])
+    
+    ga = np.array([[],[]])
+    alpha1 = np.array([[],[]])
     #SumV = np.array([[],[]])
     
     
     for q in range(len(pages[0][0][0])):
-        g = 0.1
-        alpha = 10
+        gstep = 0.1
+        alphastep = 10
         
-        m11 = (pages[2][0][1][q]-pages[0][0][1][q])/g
-        m12 = (pages[5][0][1][q]-pages[3][0][1][q])/g
-        m13 = (pages[8][0][1][q]-pages[6][0][1][q])/g
-        m21 = (pages[6][0][1][q]-pages[0][0][1][q])/alpha
-        m22 = (pages[7][0][1][q]-pages[1][0][1][q])/alpha
-        m23 = (pages[8][0][1][q]-pages[2][0][1][q])/alpha
+        m11 = (pages[2][0][1][q]-pages[0][0][1][q])/gstep
+        m12 = (pages[5][0][1][q]-pages[3][0][1][q])/gstep
+        m13 = (pages[8][0][1][q]-pages[6][0][1][q])/gstep
+        m21 = (pages[6][0][1][q]-pages[0][0][1][q])/alphastep
+        m22 = (pages[7][0][1][q]-pages[1][0][1][q])/alphastep
+        m23 = (pages[8][0][1][q]-pages[2][0][1][q])/alphastep
         smg = [m11,m12,m13]
         sma = [m21,m22,m23]
         timem = pages[0][0][0][q]
         timem1 = [pages[0][0][0][q], pages[0][0][0][q], pages[0][0][0][q]]
-        StepS = np.append(StepS, timem1)
+        T_step_r = np.append(T_step_r, timem1)
+        T_step = np.append(T_step, timem)
+        
+        ga = np.append(ga, m12)
+        alpha1 = np.append(alpha1, m22)
+        
         SM = [smg,sma]
         Sg = np.append(Sg, smg)
         Sa = np.append(Sa, sma)
@@ -89,24 +96,28 @@ def analyze(fp,op):
             varavg = varavg + pages[d][0][6][q]
             varavg1 = varavg/len(pages)
         Var_a = np.append(Var_a, varavg1)
+        
+        
+        
+    plt.plot(T_step,ga,marker = 'o')
+    plt.xlabel('Time')
+    plt.ylabel('r1 mean sensitivity(g)')
+    plt.title('r1 mean sensitivity(g) vs time')
+    plt.show()
+
+     
+    plt.plot(T_step,alpha1,marker = 'o')
+    plt.xlabel('Time')
+    plt.ylabel('r1 mean sensitivity(alpha)')
+    plt.title('r1 mean sensitivity(alpha) vs time')
+    plt.show()
+     
+     
+     
+###############################################################################
+
     
 ##############################################################################
-#var
-#############################################################################
-
-
-
-
-
-
-
-
-
-
-
-############################################################################
-############################################################################
-
 
 ###############################################################################
     final_array = np.array([[],[]])
@@ -157,7 +168,9 @@ def analyze(fp,op):
 # final_arrayx = np.append(final_arrayx, final_arrayw)
             #fi = np.insert(valw, 1, x) 
         
-        
+##############################################################################
+  #test cell      
+##############################################################################        
     plt.plot(final_arrayw1[0],final_arrayw1[1])
     plt.show()
     outputFile = open('output.csv', 'w')
@@ -168,6 +181,7 @@ def analyze(fp,op):
     m3  = np.array([[],[]])
     m4  = np.array([[],[]])
     m5  = np.array([[],[]])
+    m6  = np.array([[],[]])
     m7  = np.array([[],[]])
     m8  = np.array([[],[]])
     m9  = np.array([[],[]])
@@ -185,22 +199,58 @@ def analyze(fp,op):
         final_arrayw[ii+500],final_arrayw[ii+600],
         final_arrayw[ii+700],final_arrayw[ii+800]]
         m1 = np.append(m1, final_arrayw[ii+0])
-        m2 = np.append(m1, final_arrayw[ii+100])
-        m3 = np.append(m1, final_arrayw[ii+200])
-        m4 = np.append(m1, final_arrayw[ii+300])
-        m5 = np.append(m1, final_arrayw[ii+400])
-        m6 = np.append(m1, final_arrayw[ii+500])
-        m7 = np.append(m1, final_arrayw[ii+600])
-        m8 = np.append(m1, final_arrayw[ii+700])
-        m9 = np.append(m1, final_arrayw[ii+800])
-        m0 = np.append(m1, final_arrayw[ii+100])
-    parm = [m1,m2,m3,m4,m5,m6,m7,m8]
-        
-        
-        
-        
-        
+        m2 = np.append(m2, final_arrayw[ii+100])
+        m3 = np.append(m3, final_arrayw[ii+200])
+        m4 = np.append(m4, final_arrayw[ii+300])
+        m5 = np.append(m5, final_arrayw[ii+400])
+        m6 = np.append(m6, final_arrayw[ii+500])
+        m7 = np.append(m7, final_arrayw[ii+600])
+        m8 = np.append(m8, final_arrayw[ii+700])
+        m9 = np.append(m9, final_arrayw[ii+800])
+        m0 = np.append(m0, final_arrayw[ii+100])
+    parm = [m1,m2,m3,m4,m5,m6,m7,m8,m9]
+    myarray = np.asarray(parm)
+    youraaray = myarray.T
+         
         
     outputFile.close()
 
 ##############################################################################
+    linModel = linear_model.LinearRegression()
+    linModel.fit(myarray.T,myarray.T)
+    linModelMatrix = linModel.coef_
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+##############################################################################
+
+
+
+
+    with open(op,'wb') as h:cPickle.dump(sm,h)
+    pdb.set_trace()
+
+def tellmewhatsup(fp):
+    with open(fp,'rb') as h:data = cPickle.load(h)
+    print('this is up',data)
+    pdb.set_trace()
+
+if __name__ == '__main__':
+    fi = os.path.join(os.getcwd(),'ensemble','statistics_output.pkl')
+    op = os.path.join(os.getcwd(),'sensimatrix.pkl')
+    analyze(fi,op)
+    tellmewhatsup(op)

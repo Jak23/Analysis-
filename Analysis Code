@@ -1,7 +1,7 @@
 """
 
 
-mport matplotlib.pyplot as plt
+import matplotlib.pyplot as plt
 import numpy as np
 import cPickle,os,pdb,itertools
 import csv
@@ -112,9 +112,10 @@ def analyze(fp,op):
     plt.title('r1 mean sensitivity(alpha) vs time')
     plt.show()
      
-     
-     
+##########################################################################     
+ #Genearlized simple sensitiivty generation     
 ###############################################################################
+
 
     
 ##############################################################################
@@ -224,11 +225,37 @@ def analyze(fp,op):
 
 
 
-
-
-
-
-
+######################################################################
+    numsteps = 3
+    varnum = 2
+    Yam = (len(pages)/2)
+    gstep = 0.1
+    alphastep = 10
+    
+    casper = np.array([[],[]])
+    h1 =  np.array([[],[]])
+    h2 =  np.array([[],[]])
+    h3 =  np.array([[],[]])
+    h4 =  np.array([[],[]])
+    for k in range(len(pages[0][0][0])):
+    # que step size 
+    #que number of parameters 
+    #both can probably be easily automated with good pythoning 
+    # probably best to have que number then +/- amounts for each in order
+        for n in (0, 1) :
+            cv = 3**(varnum-1-n) 
+            ub = int(Yam+cv)
+            lb = int(Yam-cv)
+            M_1 = (pages[ub][0][1][k]-pages[lb][0][1][k])
+            #print(cv) 
+            #print(M_1)
+            casper = np.append(casper, M_1)
+    
+        h1 = np.append(h1, casper[0+2*k])
+        h1a = h1/alphastep
+        h2 = np.append(h2, casper[1+2*k])
+        #h4 = np.append(h4, casper[2+2*k]
+        h3 = np.append(h3, casper)
 
 
 
